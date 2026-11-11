@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "argus-assistant"
+description = "A local-first personal assistant for Windows: it watches what you actually did, keeps a board of what to do next, and briefs you on it."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Anshuman Pandey" }]
+requires-python = ">=3.12"
+keywords = ["productivity", "time-tracking", "local-first", "windows", "assistant", "automation"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Win32 (MS Windows)",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Operating System :: Microsoft :: Windows :: Windows 11",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Scheduling",
+    "Topic :: Utilities",
+]
+dynamic = ["version", "dependencies"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pyinstaller>=6.0"]
+
+[project.scripts]
+argus = "argus.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/ansh0965/argus"
+Documentation = "https://github.com/ansh0965/argus/tree/main/docs"
+Issues = "https://github.com/ansh0965/argus/issues"
+Changelog = "https://github.com/ansh0965/argus/blob/main/CHANGELOG.md"
+
+[tool.setuptools.dynamic]
+version = { attr = "argus.__version__" }
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools.packages.find]
+include = ["argus*"]
+
+[tool.setuptools.package-data]
+"argus.web" = ["static/*.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

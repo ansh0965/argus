@@ -1,0 +1,50 @@
+name: Release
+
+# Pushing a tag like v0.1.0 builds Argus.exe on a clean Windows runner and
+# attaches it, zipped, to the GitHub release for that tag.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Argus.exe
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Run the test suite
+        run: python -m pytest tests -q
+      - name: Build with PyInstaller
+        run: pyinstaller argus.spec --noconfirm --clean --distpath build_dist --workpath build_work --log-level WARN
+      - name: Smoke test the frozen app
+        shell: pwsh
+        run: |
+          $env:ARGUS_HOME = Join-Path $env:RUNNER_TEMP "argus-smoke"
+          New-Item -ItemType Directory -Force $env:ARGUS_HOME | Out-Null
+          $p = Start-Process -FilePath "build_dist\Argus\Argus.exe" -ArgumentList "privacy" -Wait -PassThru
+          if ($p.ExitCode -ne 0) { throw "Argus.exe privacy exited with $($p.ExitCode)" }
+          if (-not (Test-Path (Join-Path $env:ARGUS_HOME "data\argus.db"))) { throw "the frozen app did not create its database" }
+      - name: Package
+        shell: pwsh
+        run: |
+          Copy-Item config.example.yaml, README.md, LICENSE build_dist\Argus\
+          Compress-Archive -Path build_dist\Argus\* -DestinationPath "Argus-${{ github.ref_name }}-windows-x64.zip"
+      - name: Attach to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          gh release view $tag 2>$null
+          if ($LASTEXITCODE -ne 0) { gh release create $tag --title "ARGUS $tag" --generate-notes }
+          gh release upload $tag "Argus-$tag-windows-x64.zip" --clobber

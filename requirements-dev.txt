@@ -1,0 +1,4 @@
+# Everything in requirements.txt, plus what you need to test and build.
+-r requirements.txt
+pytest>=8.0
+pyinstaller>=6.0

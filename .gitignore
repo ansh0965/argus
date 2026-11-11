@@ -1,0 +1,37 @@
+# Runtime data - irreplaceable, never versioned
+data/
+logs/
+
+# Your real config stays on your machine; see config.example.yaml
+config.yaml
+
+# Environment
+.venv/
+venv/
+.env
+
+# Build artefacts (argus build)
+build_dist/
+build_work/
+_internal/
+_internal.old/
+*.exe
+*.exe.bak-*
+*.bak
+*.old
+dist/
+*.egg-info/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+.mypy_cache/
+
+# Editors and tools
+.idea/
+.vscode/
+.gstack/

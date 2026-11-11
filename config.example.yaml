@@ -1,0 +1,149 @@
+# ARGUS configuration.
+#
+# Copy this file to `config.yaml` (same folder) and change what you need.
+# Everything here is optional: a key you leave out falls back to the default in
+# argus/config.py, and ARGUS runs fine with no config.yaml at all.
+# The daemon picks up a saved change within a minute - no restart.
+#
+# Full reference: docs/configuration.md
+
+identity:
+  # user_name: Alex            # default: your Windows account's first name
+  assistant_name: ARGUS
+  work_hours:                  # used for timesheets, the standup and "plan my day"
+    start: '10:30'
+    end: '18:30'
+    days: [0, 1, 2, 3, 4]      # 0 = Monday
+  day_starts_at: '04:00'       # work after midnight belongs to the day before
+
+# What makes something "work" or "personal". Nothing is built in - list your own
+# markers. They are matched, case-insensitively, against window titles, project
+# names and paths. Personal wins when both match.
+realms:
+  work_markers: []             # e.g. [acme, atlas, jira.acme.example]
+  personal_markers: []         # e.g. [portfolio, side-project]
+  remote_markers: []           # terminal titles that mean a remote session, e.g. [build-box]
+  work_github_logins: []       # `gh` accounts whose pull requests are office work
+
+# Folders ARGUS watches for file changes.
+watch_dirs:
+  - ~/Desktop
+  - ~/Documents
+  - ~/Downloads
+
+# Where to look for git repositories (searched `scan_depth` levels deep).
+git_repos:
+  scan_roots: ['~/Desktop', '~']
+  scan_depth: 2
+
+# The thread engine groups your activity by project. A project is the first
+# folder below one of `roots`. Leave `roots` empty for the built-in list
+# (~/Desktop, ~/Projects, ~/code, ~/dev, ~/src, ~/repos, ~/source/repos, ~).
+threads:
+  roots: []
+  non_projects: []             # folder names that are never a project
+
+sensors:
+  window:     {enabled: true, poll_seconds: 2, min_session_seconds: 3}
+  idle:       {enabled: true, afk_seconds: 180}
+  system:     {enabled: true, poll_seconds: 30}
+  process:    {enabled: true, poll_seconds: 10}
+  files:      {enabled: true, debounce_seconds: 20}
+  browser:    {enabled: true, poll_seconds: 300}
+  git:        {enabled: true, poll_seconds: 600}
+  network:    {enabled: true, poll_seconds: 120}
+  # Off by default. Local only, purged after `retain_days`.
+  screenshot: {enabled: false, poll_seconds: 300, retain_days: 3, max_width: 1280}
+
+privacy:
+  # Folders / projects that are never recorded at all.
+  private_projects: [_secure]
+  # The three lists below have sensible built-in defaults (password managers,
+  # banking and one-time-code titles, bank and health sites). A list you set
+  # here REPLACES the built-in one, so copy the default from argus/config.py
+  # and add to it rather than starting from scratch.
+  #
+  # private_apps: [...]          apps whose window titles are stored as "<private>"
+  # private_title_words: [...]   a title containing one is stored as "<private>"
+  # sensitive_domains: [...]     sites recorded as the domain only
+  # How long each kind of record is kept, in days.
+  retain_days:
+    events: 400
+    metrics: 90
+    screenshots: 3
+    runs: 30
+    alerts: 90
+    mail: 60
+
+backup:
+  enabled: true                # nightly, encrypted to your Windows account
+  keep: 5
+
+# The LLM behind briefings and `argus ask`. Tried in order; the first one that
+# is available answers. See docs/configuration.md#the-brain
+brain:
+  providers: [claude_cli, gemini, anthropic]
+  claude_cli_model: sonnet
+  gemini_model: gemini-2.5-flash
+  anthropic_model: claude-sonnet-5
+  timeout_seconds: 180
+  max_daily_calls: 200         # a hard cap, so a bug cannot burn your quota
+  style: ''                    # e.g. "British English, 12h clock."
+
+notify:
+  enabled: true
+  voice: false                 # speak alerts aloud
+  voice_name: Zira
+  quiet_hours: {start: '01:30', end: '08:00'}   # only `urgent` breaks through
+  min_severity: info
+
+board:
+  enabled: true
+  plan_at: '09:15'             # "Plan your day" reminder (work days)
+  shutdown_at: '18:45'         # "Wrap up" reminder (work days)
+  hotkey: ctrl+alt+space       # quick capture from any app; '' turns it off
+  drift_nudges: true
+
+digests:
+  morning_brief: {enabled: true, at: '08:30'}
+  evening_wrap:  {enabled: true, at: '23:30'}
+  weekly_retro:  {enabled: true, day: 6, at: '20:00'}   # 6 = Sunday
+  journal:       {enabled: true}
+
+focus:
+  distraction_apps: [youtube, netflix, instagram, twitter, x.com, reddit, primevideo,
+                     hotstar, steam, discord]
+  deep_work_min_minutes: 25
+  switch_storm_per_10min: 25
+  nudge_cooldown_minutes: 45
+
+github:
+  enabled: true                # needs the `gh` CLI, signed in
+
+devtools:
+  hygiene: true                # staged secrets, huge files, stale branches
+
+# Google is optional. Connect accounts with `argus google login --label <name>`.
+# See docs/google.md
+google:
+  enabled: true
+  poll_seconds: 300
+  calendar_alert_minutes: [10, 2]
+  mail_vip: []                 # e.g. [boss@example.com]
+  mail_ignore_senders: [noreply@, no-reply@, newsletter@, notifications@]
+  default_features: [calendar, mail, tasks, drive]
+  tasks_account: ''            # label that receives `argus task add`; '' = first connected
+  allow_destructive: false     # ARGUS never deletes or sends mail unless you flip this
+  accounts: {}                 # per-account limits, e.g.  work: {features: [calendar]}
+
+automations:
+  focus_guardian:    {enabled: true}
+  meeting_sentinel:  {enabled: true}
+  system_watchdog:   {enabled: true, disk_free_gb: 12, cpu_sustained_pct: 92,
+                      cpu_sustained_minutes: 10, battery_low_pct: 20}
+  repo_janitor:      {enabled: true, stale_hours: 24}
+  inbox_triage:      {enabled: true}
+  standup_writer:    {enabled: true}
+  security_watch:    {enabled: true}
+  break_reminder:    {enabled: true, after_minutes: 90}
+  downloads_janitor: {enabled: true, warn_gb: 15}

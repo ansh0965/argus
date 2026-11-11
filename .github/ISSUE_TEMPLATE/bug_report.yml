@@ -1,0 +1,58 @@
+name: Bug report
+description: Something ARGUS does wrong, or stopped doing.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. Before you paste anything: ARGUS data is personal.
+        **Remove window titles, file names, mail subjects and account names** from logs
+        and output you share here.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. argus ...
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `argus doctor`
+      description: Paste it after removing anything private.
+      render: text
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log lines (`argus logs --lines 80`)
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: ARGUS version or commit
+      placeholder: 0.1.0 / a1b2c3d
+    validations:
+      required: true
+  - type: dropdown
+    id: how
+    attributes:
+      label: How you run it
+      options:
+        - Argus.exe (built with `argus build`)
+        - From source (venv)
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Windows version
+      placeholder: Windows 11 24H2
