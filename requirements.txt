@@ -11,7 +11,7 @@ watchdog>=4.0
 mss>=9.0
 pystray>=0.19
 google-api-python-client>=2.100
-google-auth>=2.20
+google-auth>=2.62.1
 google-auth-oauthlib>=1.0
 pywin32>=306; sys_platform == "win32"
 win11toast>=0.35; sys_platform == "win32"
