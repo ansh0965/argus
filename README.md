@@ -19,7 +19,11 @@ It watches what you actually did, keeps a board of what to do next, and tells yo
 
 <br>
 
-<img src="docs/images/home.png" alt="The ARGUS Home page: the one thing to do now, today's list, and what needs you" width="900">
+<a href="https://github.com/ansh0965/argus/releases/download/v0.1.0/argus-walkthrough.mp4">
+  <img src="docs/images/walkthrough-poster.jpg" alt="Watch the 78-second ARGUS walkthrough" width="900">
+</a>
+
+**[▶ Watch the 78-second walkthrough](https://github.com/ansh0965/argus/releases/download/v0.1.0/argus-walkthrough.mp4)** (MP4, 5 MB, sample data)
 
 </div>
 
