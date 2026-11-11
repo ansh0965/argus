@@ -13,6 +13,8 @@ It watches what you actually did, keeps a board of what to do next, and tells yo
 ![Platform: Windows 10 | 11](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078d4.svg)
 ![Data: stays on your machine](https://img.shields.io/badge/data-stays%20on%20your%20machine-2ea44f.svg)
 
+### [⬇ Download for Windows](https://github.com/ansh0965/argus/releases/latest)
+
 [Quick start](#quick-start) · [What it does](#what-it-does) · [Privacy](#privacy) · [Docs](#documentation) · [Contributing](#contributing)
 
 <br>
@@ -81,6 +83,23 @@ More in [docs/board.md](docs/board.md).
 
 ## Quick start
 
+### Option 1: download the app
+
+No Python needed.
+
+1. Download `Argus-…-windows-x64.zip` from the
+   [latest release](https://github.com/ansh0965/argus/releases/latest).
+2. Unzip it into a folder of its own, for example `Documents\Argus`.
+   ARGUS keeps its data in that folder, so pick somewhere it can stay.
+3. Double-click **`Argus.exe`**. A tray icon appears and the dashboard opens
+   in your browser.
+
+The app is not code-signed, so Windows SmartScreen shows a warning the first
+time: **More info → Run anyway**. To start it at login, open a terminal in the
+folder and run `.\Argus.exe install`.
+
+### Option 2: run from source
+
 **You need:** Windows 10 or 11, [Python 3.12](https://www.python.org/downloads/), and Git.
 
 ```powershell
@@ -94,7 +113,7 @@ python -m venv .venv
 .\argus dash        # open the dashboard
 ```
 
-That is a working install. On first run ARGUS rebuilds the last 90 days from
+Either way, that is a working install. On first run ARGUS rebuilds the last 90 days from
 your browser history, git logs and Claude Code transcripts, so the dashboard
 is not empty.
 
@@ -229,8 +248,10 @@ up. Worth knowing:
 
 - **Windows only.** The sensors, toasts, tray and autostart use Windows APIs.
 - **Tested on Python 3.12.**
-- There is no installer yet: you run it from a checkout, and can build
-  `Argus.exe` yourself.
+- The download is a zip, not an installer, and it is not code-signed.
+- In the downloaded app, commands are run as `.\Argus.exe <command>`, and
+  their output cannot be piped or redirected. The source install has the full
+  `argus` command line.
 - The Google integration needs your own Google Cloud OAuth client.
 
 ## License
